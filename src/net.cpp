@@ -1191,12 +1191,12 @@ void MapPort(bool)
 // The first name is used as information source for addrman.
 // The second name should resolve to a list of seed addresses.
 static const char *strMainNetDNSSeed[][2] = {
-	{"seed1.acp.ssdpool.com", "dnsseed.acp.ssdpool.com"},
-	{"52.11.163.91", "52.11.163.91"},
-	{"198.211.106.154", "198.211.106.154"},
-	{"74.120.220.54", "74.120.220.54"},
-	{"108.61.10.90", "108.61.10.90"},
-	{"192.3.165.30", "192.3.165.30"},
+	{"acp.servep2p.com", "acp.servep2p.com"},
+	{"159.203.31.42", "159.203.31.42"},
+	{"139.59.255.88", "139.59.255.88"},
+	{"138.68.143.185", "138.68.143.185"},
+	{"138.68.14.183", "138.68.14.183"},
+	{"188.166.175.90", "188.166.175.90"},
 	{"203.212.152.229", "203.212.152.229"},
     {NULL, NULL},
     {NULL, NULL}
