@@ -186,6 +186,8 @@ HEADERS += src/qt/bitcoingui.h \
     src/sync.h \
     src/util.h \
     src/hash.h \
+    src/sph_groestl.h \
+    src/hashgroestl.h \
     src/uint256.h \
     src/serialize.h \
     src/main.h \
@@ -198,6 +200,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/bloom.h \
     src/mruset.h \
     src/checkqueue.h \
+    src/sph_types.h \
     src/json/json_spirit_writer_template.h \
     src/json/json_spirit_writer.h \
     src/json/json_spirit_value.h \
@@ -271,6 +274,7 @@ SOURCES += src/qt/bitcoin.cpp \
     src/netbase.cpp \
     src/key.cpp \
     src/script.cpp \
+    src/groestl.c \
     src/main.cpp \
     src/init.cpp \
     src/net.cpp \

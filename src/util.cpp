@@ -68,6 +68,7 @@ namespace boost {
 
 using namespace std;
 
+int miningAlgo = 0;
 map<string, string> mapArgs;
 map<string, vector<string> > mapMultiArgs;
 bool fDebug = false;
@@ -580,6 +581,8 @@ void ParseParameters(int argc, const char* const argv[])
         // interpret -nofoo as -foo=0 (and -nofoo=0 as -foo=1) as long as -foo not set
         InterpretNegativeSetting(name, mapArgs);
     }
+
+    miningAlgo = GetArg("-algo", 0);
 }
 
 std::string GetArg(const std::string& strArg, const std::string& strDefault)
@@ -1276,10 +1279,6 @@ void ShrinkDebugFile()
     else if(file != NULL)
 	     fclose(file);
 }
-
-
-
-
 
 
 

@@ -404,8 +404,6 @@ public:
 typedef base_uint<160> base_uint160;
 typedef base_uint<256> base_uint256;
 
-
-
 //
 // uint160 and uint256 could be implemented as templates, but to keep
 // compile errors and debugging cleaner, they're copy and pasted.

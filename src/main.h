@@ -9,6 +9,7 @@
 #include "sync.h"
 #include "net.h"
 #include "script.h"
+#include "hashgroestl.h"
 
 #include <list>
 
@@ -67,14 +68,33 @@ static const int fHaveUPnP = true;
 static const int fHaveUPnP = false;
 #endif
 
+//static const int HARDFORK_GROESTL_BLOCK = 187001;
+static const int HARDFORK_GROESTL_BLOCK = 194987;
+
+enum {
+    ALGO_SHA256  = 0,
+    ALGO_GROESTL = 1,
+};
+
+enum {
+    ALGO_SHA256_VERSION  = 2,
+    ALGO_GROESTL_VERSION = 6,
+};
+
+static inline std::string GetAlgoName(int algo)
+{
+    return ((algo == ALGO_GROESTL) ?
+            std::string("groestl") :
+            std::string("sha256"));
+}
+
+const CBlockIndex* GetLastBlockIndexForAlgo(const CBlockIndex* pindex, int algo);
+
+extern void sph_groestl512_init(void *cc);
+extern void sph_groestl512(void *cc, const void *data, size_t len);
+extern void sph_groestl512_close(void *cc, void *dst);
 
 extern CScript COINBASE_FLAGS;
-
-
-
-
-
-
 extern CCriticalSection cs_main;
 extern std::map<uint256, CBlockIndex*> mapBlockIndex;
 extern std::set<CBlockIndex*, CBlockIndexWorkComparator> setBlockIndexValid;
@@ -160,11 +180,11 @@ void ThreadScriptCheck();
 /** Run the miner threads */
 void GenerateBitcoins(bool fGenerate, CWallet* pwallet);
 /** Generate a new block, without valid proof-of-work */
-CBlockTemplate* CreateNewBlock(CReserveKey& reservekey);
+CBlockTemplate* CreateNewBlock(CReserveKey& reservekey, int algo);
 /** Modify the extranonce in a block */
 void IncrementExtraNonce(CBlock* pblock, CBlockIndex* pindexPrev, unsigned int& nExtraNonce);
 /** Do mining precalculation */
-void FormatHashBuffers(CBlock* pblock, char* pmidstate, char* pdata, char* phash1);
+void FormatHashBuffers(CBlock* pblock, char* pmidstate, char* pdata, char* phash1, int algo);
 /** Check mined block */
 bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey);
 /** Check whether a block hash satisfies the proof-of-work requirement specified by nBits */
@@ -1273,7 +1293,7 @@ class CBlockHeader
 {
 public:
     // header
-    static const int CURRENT_VERSION=2;
+    static const int CURRENT_VERSION=ALGO_SHA256_VERSION;
     int nVersion;
     uint256 hashPrevBlock;
     uint256 hashMerkleRoot;
@@ -1307,6 +1327,19 @@ public:
         nNonce = 0;
     }
 
+    void SetAlgo(int algo)
+    {
+        nVersion = ((algo == ALGO_GROESTL) ?
+                    ALGO_GROESTL_VERSION :
+                    ALGO_SHA256_VERSION);
+    }
+
+    int GetAlgo() const
+    {
+        return ((nVersion == ALGO_SHA256_VERSION) ?
+                ALGO_SHA256 : ALGO_GROESTL);
+    }
+
     bool IsNull() const
     {
         return (nBits == 0);
@@ -1314,7 +1347,15 @@ public:
 
     uint256 GetHash() const
     {
+        if (nVersion == ALGO_GROESTL_VERSION) {
+            return HashGroestl(BEGIN(nVersion), END(nNonce));
+        }
         return Hash(BEGIN(nVersion), END(nNonce));
+    }
+
+    uint256 GetGroestlHash() const
+    {
+        return HashGroestl(BEGIN(nVersion), END(nNonce));
     }
 
     int64 GetBlockTime() const
@@ -1743,6 +1784,20 @@ public:
         if (bnTarget <= 0)
             return 0;
         return (CBigNum(1)<<256) / (bnTarget+1);
+    }
+
+    uint256 GetBlockPoWHash() const
+    {
+        CBlockHeader block = GetBlockHeader();
+        if (block.GetAlgo() == ALGO_GROESTL)
+            return block.GetGroestlHash();
+        return block.GetHash();
+    }
+
+    int GetAlgo() const
+    {
+        return ((nVersion == ALGO_SHA256_VERSION) ?
+                ALGO_SHA256 : ALGO_GROESTL);
     }
 
     bool IsInMainChain() const
