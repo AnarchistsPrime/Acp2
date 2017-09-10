@@ -11,7 +11,7 @@ using namespace std;
 
 void ScriptPubKeyToJSON(const CScript& scriptPubKey, Object& out);
 
-double GetDifficulty(const CBlockIndex* blockindex)
+double GetDifficulty(const CBlockIndex* blockindex, int algo)
 {
     // Floating point number that is a multiple of the minimum difficulty,
     // minimum difficulty = 1.0.
@@ -21,7 +21,7 @@ double GetDifficulty(const CBlockIndex* blockindex)
             return 1.0;
         else
             //blockindex = pindexBest;
-            blockindex = GetLastBlockIndexForAlgo(pindexBest, miningAlgo);
+            blockindex = GetLastBlockIndexForAlgo(pindexBest, algo);
     }
 
     if (blockindex) {
@@ -67,7 +67,8 @@ Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex)
     result.push_back(Pair("time", (boost::int64_t)block.GetBlockTime()));
     result.push_back(Pair("nonce", (boost::uint64_t)block.nNonce));
     result.push_back(Pair("bits", HexBits(block.nBits)));
-    result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
+    result.push_back(Pair("difficulty_sha256", GetDifficulty(blockindex, ALGO_SHA256)));
+    result.push_back(Pair("difficulty_groestl", GetDifficulty(blockindex, ALGO_GROESTL)));
 
     if (blockindex->pprev)
         result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHash().GetHex()));
@@ -95,7 +96,7 @@ Value getdifficulty(const Array& params, bool fHelp)
             "getdifficulty\n"
             "Returns the proof-of-work difficulty as a multiple of the minimum difficulty.");
 
-    return GetDifficulty();
+    return GetDifficulty(NULL, miningAlgo);
 }
 
 

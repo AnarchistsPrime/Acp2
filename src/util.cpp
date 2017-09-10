@@ -582,7 +582,7 @@ void ParseParameters(int argc, const char* const argv[])
         InterpretNegativeSetting(name, mapArgs);
     }
 
-    miningAlgo = GetArg("-algo", 0);
+    miningAlgo = ((GetArg("-algo", "sha256") == "sha256") ? 0 : 1);
 }
 
 std::string GetArg(const std::string& strArg, const std::string& strDefault)

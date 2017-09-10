@@ -1209,6 +1209,7 @@ unsigned int DigiShield(const CBlockIndex* pindexLast, const CBlockHeader *pbloc
            return bnProofOfWorkLimit.GetCompact();
 
        // Limit adjustment step
+       pindexLast = pindexPrev;
        int64 nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
        printf(" nActualTimespan = %"PRI64d" before bounds\n", nActualTimespan);
 
@@ -1228,11 +1229,8 @@ unsigned int DigiShield(const CBlockIndex* pindexLast, const CBlockHeader *pbloc
        printf("Before: %08x %s\n", pindexLast->nBits, CBigNum().SetCompact(pindexLast->nBits).getuint256().ToString().c_str());
        printf("After: %08x %s\n", bnNew.GetCompact(), bnNew.getuint256().ToString().c_str());
 
-
        if (bnNew > bnProofOfWorkLimit)
            bnNew = bnProofOfWorkLimit;
-
-
 
        return bnNew.GetCompact();
 }
