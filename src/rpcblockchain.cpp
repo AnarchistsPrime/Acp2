@@ -67,6 +67,7 @@ Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex)
     result.push_back(Pair("time", (boost::int64_t)block.GetBlockTime()));
     result.push_back(Pair("nonce", (boost::uint64_t)block.nNonce));
     result.push_back(Pair("bits", HexBits(block.nBits)));
+    result.push_back(Pair("difficulty", GetDifficulty(blockindex, miningAlgo)));
     result.push_back(Pair("difficulty_sha256", GetDifficulty(blockindex, ALGO_SHA256)));
     result.push_back(Pair("difficulty_groestl", GetDifficulty(blockindex, ALGO_GROESTL)));
 
