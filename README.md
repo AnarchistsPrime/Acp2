@@ -15,7 +15,7 @@ out collectively by the network. AnarchistsPrime is also the name of the open so
 software which enables the use of this currency.
 ACP has a network time of three minutes and adjusts difficulty every block using Digishield.
 Thanks to Digishield from the Digibyte developers.
-AnarchistsPrime uses sha256 and has 32 "coins" per block found.
+AnarchistsPrime uses sha256d + Groestl(myr-grs) pow (proof of work)and has 32 "coins" per block found.
 Focus for long term developing the network and dedication is part of the core focus within ACP.
 Crypto Community involvement is encouraged in the direction to which the network expands. 
 
