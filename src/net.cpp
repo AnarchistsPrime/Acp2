@@ -1192,12 +1192,12 @@ void MapPort(bool)
 // The second name should resolve to a list of seed addresses.
 static const char *strMainNetDNSSeed[][2] = {
 	{"acp.servep2p.com", "acp.servep2p.com"},
-	{"159.203.31.42", "159.203.31.42"},
-	{"139.59.255.88", "139.59.255.88"},
-	{"138.68.143.185", "138.68.143.185"},
-	{"138.68.14.183", "138.68.14.183"},
-	{"188.166.175.90", "188.166.175.90"},
-	{"203.212.152.229", "203.212.152.229"},
+	{"acp1.servep2p.com", "acp1.servep2p.com"},
+	{"node.servep2p.com", "node.servep2p.com"},
+	{"acppool.servep2p.com", "acppool.servep2p.com"},
+	{"", ""},
+	{"", ""},
+	{"", ""},
     {NULL, NULL},
     {NULL, NULL}
 };
